@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+    <title>Registration Form</title>
+    <style>
+      .error {
+        color: red;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body style="background-color: #f0f1f2">
+
+    <div class="container p-2">
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="text-center">Registration Form</h3>
+              <form th:action="@{/register}" method="post" th:object="${user}" onsubmit="return validateForm()">
+                <div class="form-group">
+                  <label for="fullName">Full Name</label>
+                  <input type="text" class="form-control" id="fullName" name="fullname" aria-describedby="fullNameHelp" required>
+                  <div class="error" id="fullNameError"></div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="mobileno">Mobile No</label>
+                  <input type="text" class="form-control" id="mobileno" name="mobileno" aria-describedby="mobileHelp" required pattern="^\d{10}$" title="Please enter a valid 10-digit mobile number">
+                  <div class="error" id="mobileError"></div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
+                  <div class="error" id="emailError"></div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input type="text" class="form-control" id="username" name="username" aria-describedby="usernameHelp" required>
+                  <div class="error" id="usernameError"></div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                  <div class="error" id="passwordError"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Register</button>
+                <span th:utext="${successMessage}"></span>
+
+                <div class="alert alert-success alert-dismissible col-sm-12" th:if="${bindingResult != null and bindingResult.hasErrors()}">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                  <ul th:each="data : ${bindingResult.allErrors}">
+                    <li th:text="${data.objectName} + ': ' + ${data.defaultMessage}"></li>
+                  </ul>
+                </div>
+              </form>  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+    <!-- Client-side validation script -->
+    <script>
+      function validateForm() {
+        let isValid = true;
+
+        // Clear previous error messages
+        document.getElementById("fullNameError").innerText = "";
+        document.getElementById("mobileError").innerText = "";
+        document.getElementById("emailError").innerText = "";
+        document.getElementById("usernameError").innerText = "";
+        document.getElementById("passwordError").innerText = "";
+
+        // Validate full name
+        const fullName = document.getElementById("fullName").value;
+        if (fullName.trim() === "") {
+          document.getElementById("fullNameError").innerText = "Full name is required.";
+          isValid = false;
+        }
+
+        // Validate mobile number
+        const mobileNo = document.getElementById("mobileno").value;
+        const mobilePattern = /^\d{10}$/;
+        if (!mobilePattern.test(mobileNo)) {
+          document.getElementById("mobileError").innerText = "Please enter a valid 10-digit mobile number.";
+          isValid = false;
+        }
+
+        // Validate email
+        const email = document.getElementById("email").value;
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(email)) {
+          document.getElementById("emailError").innerText = "Please enter a valid email address.";
+          isValid = false;
+        }
+
+        // Validate username
+        const username = document.getElementById("username").value;
+        if (username.trim() === "") {
+          document.getElementById("usernameError").innerText = "Username is required.";
+          isValid = false;
+        }
+
+        // Validate password
+        const password = document.getElementById("password").value;
+        if (password.length < 6) {
+          document.getElementById("passwordError").innerText = "Password must be at least 6 characters long.";
+          isValid = false;
+        }
+
+        return isValid;
+      }
+    </script>
+  </body>
+</html>
